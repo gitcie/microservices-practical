@@ -2,3 +2,17 @@ server:
   servlet:
     context-path: /practical
   port: 8081
+
+spring:
+  datasource:
+    url: jdbc:h2:file:D:/AppData/Service/social-multiplication;DB_CLOSE_ON_EXIT=FALSE;
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+  h2:
+    console:
+      enabled: true
+

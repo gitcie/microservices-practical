@@ -5,7 +5,7 @@ import edu.microservices.book.domain.Multiplication;
 import edu.microservices.book.domain.MultiplicationResultAttempt;
 import edu.microservices.book.domain.User;
 import edu.microservices.book.service.MultiplicationService;
-import edu.microservices.book.controller.ResultAttemptController.ResultResponse;
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,10 +20,13 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * class summary
@@ -44,6 +47,8 @@ public class ResultAttemptControllerTest {
     private MockMvc mvc;
 
     private JacksonTester<MultiplicationResultAttempt> jsonResult;
+
+    private JacksonTester<List<MultiplicationResultAttempt>> resultAttemptsValidator;
 
     @Before
     public void setUp() throws Exception {
@@ -83,6 +88,31 @@ public class ResultAttemptControllerTest {
                         resultAttempt.getResultAttempt(),
                         correct
                 )).getJson()
+        );
+    }
+
+    @Test
+    public void getUserStatsTest() throws Exception{
+        User user = new User("lusiyi");
+        Multiplication multiplication = new Multiplication(50, 60);
+        MultiplicationResultAttempt resultAttempt = new MultiplicationResultAttempt(
+                user,
+                multiplication,
+                3000,
+                true
+        );
+        List<MultiplicationResultAttempt> resultAttempts = Lists.newArrayList(resultAttempt, resultAttempt);
+
+        given(multiplicationService.getStatsForUser("lusiyi"))
+                .willReturn(resultAttempts);
+
+        MockHttpServletResponse response = mvc.perform(
+                get("/results").param("alias", "lusiyi")
+        ).andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isEqualTo(
+                resultAttemptsValidator.write(resultAttempts).getJson()
         );
     }
 }

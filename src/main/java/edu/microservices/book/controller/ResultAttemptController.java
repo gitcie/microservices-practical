@@ -14,10 +14,9 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * class summary
@@ -44,6 +43,13 @@ class ResultAttemptController {
                 isCorrect
         );
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    ResponseEntity<List<MultiplicationResultAttempt>> getUserRecentAttempts(@RequestParam("alias") final String alias){
+        return ResponseEntity.ok(
+                multiplicationService.getStatsForUser(alias)
+        );
     }
 
     @Getter

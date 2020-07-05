@@ -10,6 +10,8 @@ package edu.microservices.book.service;
 import edu.microservices.book.domain.Multiplication;
 import edu.microservices.book.domain.MultiplicationResultAttempt;
 
+import java.util.List;
+
 /**
  * 乘法业务服务
  * @author Siyi Lu
@@ -20,5 +22,7 @@ public interface MultiplicationService {
     Multiplication createRandomMultiplication();
 
     boolean checkAttempt(final MultiplicationResultAttempt resultAttempt);
+
+    List<MultiplicationResultAttempt> getStatsForUser(String userAlias);
 
 }

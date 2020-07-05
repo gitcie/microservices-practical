@@ -7,22 +7,34 @@
 
 package edu.microservices.book.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * 乘法对象
  * @author Siyi Lu
  * @since 2020/7/1
  */
+@Entity
 public class Multiplication {
 
-    private int factorA;
-    private int factorB;
+    @Id
+    @GeneratedValue
+    @Column(name = "MULTIPLICATION_ID")
+    private Long id;
 
-    private int result;
+    private final int factorA;
+    private final int factorB;
+
+    protected Multiplication(){
+        this(0, 0);
+    }
 
     public Multiplication(int factorA, int factorB){
         this.factorA = factorA;
         this.factorB = factorB;
-        this.result = factorA * factorB;
     }
 
     public int getFactorA() {
@@ -33,12 +45,8 @@ public class Multiplication {
         return factorB;
     }
 
-    public int getResult() {
-        return result;
-    }
-
     @Override
     public String toString() {
-        return "Multiplication { factorA=" + factorA + ", factorB=" + factorB + ", result(A*B)=" + result + "}";
+        return "Multiplication { factorA=" + factorA + ", factorB=" + factorB + "}";
     }
 }
