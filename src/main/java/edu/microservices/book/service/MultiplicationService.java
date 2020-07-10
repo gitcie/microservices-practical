@@ -11,6 +11,7 @@ import edu.microservices.book.domain.Multiplication;
 import edu.microservices.book.domain.MultiplicationResultAttempt;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 乘法业务服务
@@ -24,5 +25,8 @@ public interface MultiplicationService {
     boolean checkAttempt(final MultiplicationResultAttempt resultAttempt);
 
     List<MultiplicationResultAttempt> getStatsForUser(String userAlias);
+
+    Optional<MultiplicationResultAttempt> getResultAttemptById(Long attemptId);
+
 
 }

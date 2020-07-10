@@ -3,6 +3,7 @@ package edu.microservices.book.service;
 import edu.microservices.book.domain.Multiplication;
 import edu.microservices.book.domain.MultiplicationResultAttempt;
 import edu.microservices.book.domain.User;
+import edu.microservices.book.event.EventDispatcher;
 import edu.microservices.book.repository.ResultAttemptRepository;
 import edu.microservices.book.repository.UserRepository;
 import org.assertj.core.util.Lists;
@@ -39,13 +40,17 @@ public class MultiplicationServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private EventDispatcher eventDispatcher;
+
     @Before
     public void initService(){
         MockitoAnnotations.initMocks(this);
         this.multiplicationService = new MultiplicationServiceImpl(
                 randomGeneratorService,
                 resultAttemptRepository,
-                userRepository
+                userRepository,
+                eventDispatcher
         );
     }
 

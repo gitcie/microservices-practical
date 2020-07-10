@@ -10,6 +10,8 @@ package edu.microservices.book.service;
 import edu.microservices.book.domain.Multiplication;
 import edu.microservices.book.domain.MultiplicationResultAttempt;
 import edu.microservices.book.domain.User;
+import edu.microservices.book.event.EventDispatcher;
+import edu.microservices.book.event.MultiplicationSolvedEvent;
 import edu.microservices.book.repository.ResultAttemptRepository;
 import edu.microservices.book.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +39,18 @@ public class MultiplicationServiceImpl implements MultiplicationService {
 
     private UserRepository userRepository;
 
+    private EventDispatcher eventDispatcher;
+
     @Autowired
     public MultiplicationServiceImpl(
             final RandomGeneratorService randomGeneratorService,
             final ResultAttemptRepository resultAttemptRepository,
-            final UserRepository userRepository){
+            final UserRepository userRepository,
+            final EventDispatcher eventDispatcher){
         this.randomGeneratorService = randomGeneratorService;
         this.resultAttemptRepository = resultAttemptRepository;
         this.userRepository = userRepository;
+        this.eventDispatcher = eventDispatcher;
     }
 
     @Override
@@ -73,11 +79,23 @@ public class MultiplicationServiceImpl implements MultiplicationService {
                 correct
         );
         resultAttemptRepository.save(checkedAttempt);
+        eventDispatcher.sendMultiplicationSolvedEvent(
+                new MultiplicationSolvedEvent(
+                        checkedAttempt.getId(),
+                        checkedAttempt.getUser().getId(),
+                        checkedAttempt.isCorrect()
+                )
+        );
         return correct;
     }
 
     @Override
     public List<MultiplicationResultAttempt> getStatsForUser(String userAlias){
         return resultAttemptRepository.findTop5ByUserAliasOrderByIdDesc(userAlias);
+    }
+
+    @Override
+    public Optional<MultiplicationResultAttempt> getResultAttemptById(Long attemptId){
+        return resultAttemptRepository.findById(attemptId);
     }
 }

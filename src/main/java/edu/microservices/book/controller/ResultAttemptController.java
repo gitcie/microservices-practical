@@ -52,6 +52,13 @@ class ResultAttemptController {
         );
     }
 
+    @GetMapping("/{resultId}")
+    ResponseEntity<MultiplicationResultAttempt> getResultById(@PathVariable("resultId") Long resultId) {
+        return ResponseEntity.ok(
+                multiplicationService.getResultAttemptById(resultId).get()
+        );
+    }
+
     @Getter
     @RequiredArgsConstructor
     @NoArgsConstructor(force = true)
